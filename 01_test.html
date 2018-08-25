@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>3333</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <input type="text" class="input1">
+    <br>
+    <br>
+    <br>
+    <br>
+    <input type="text" class="input2">
+    <script>
+      var input1 = document.getElementsByClassName('input1')[0]
+      var input2 = document.getElementsByClassName('input2')[0]
+      // 视图更新函数
+      function cb(val){
+        console.log(val + '视图更新了')
+        input2.value = val
+      }
+     //封装一个defineProperty 方法
+     //obj对象
+     //key obj的一个属性
+     //val具体的值
+     function defineProperty_Handler(obj,key,val){
+        Object.defineProperty(obj,key,{
+          enumerable:true,//可枚举
+          configurable:true,//可被修改
+          get:function get_handle(){
+            return val
+          },
+          set:function set_handle(newVal){
+            if(newVal === val) return
+            
+            cb(newVal)//更新视图
+          }
+        })
+     }//end func
+
+     //封装一个observer函数,实时检查
+     function onserver_Handler(val){
+      console.log(val)
+       if(!val || typeof val !== 'object') return
+       Object.keys(val).forEach((key) => {
+        defineProperty_Handler(val,key,val[key])
+       })
+     }//end func
+
+     //定义一个vue类
+     class Vue {
+       constructor(options){
+         this._data = options.data
+         onserver_Handler(this._data)
+       }
+     }
+     
+     let o = new Vue({
+       data:{
+         title:'22'
+       }
+     })
+     
+
+     o._data.title = input1.value
+    </script>
+  </body>
+</html>
